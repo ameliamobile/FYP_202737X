@@ -2,6 +2,8 @@ from ultralytics import YOLO
 import cv2
 import math
 
+from sort import *
+
 cap = cv2.VideoCapture('../static/uploads/speedcam.mp4')  # Webcam
 
 frame_width = int(cap.get(3))
@@ -22,12 +24,22 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "microwave", "oven", "toaster", "sink", "refrigerator", "book", "clock", "vase", "scissors",
               "teddy bear", "hair drier", "toothbrush"]
 
+mask = cv2.imread("mask.png")
+
+# Tracking
+tracker = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
 while True:
     success, img = cap. read()
+    # As to only display the object detection
+    imgRegion = cv2.bitwise_and(img, mask)
+
+    results = model(imgRegion, stream=True)
+
+    detections = np.empty((0,5))
+
     # Doing detection using YOLOv8 frame by frame
     # Stream = True will use the generator and it is more efficient than normal
-    results = model(img, stream=True)
     # Once we have the results, we can check for the individual bounding boxes and see how well it performs
     # Once we have the results, we will loop through them and we will have the bounding boxes for each of the results
     # We will loop through each of the bounding box
@@ -46,17 +58,29 @@ while True:
             conf = math.ceil((box.conf[0] * 100)) / 100  # Calculates the confidence score and rounds the confidence
             # Extracts the class ID of the detected object
             cls = int(box.cls[0])
+
             class_name = classNames[cls]
+            if class_name == "car" or class_name == "truck" and conf > 0.5:
             # Combining the label and confidence score
-            label = f'{class_name}{conf}'
+                label = f'{class_name}{conf}'
             # Positioning of the label and confidence score
-            t_size = cv2.getTextSize(label, 0, fontScale=1, thickness=2)[0]  # Size of the label
-            print(t_size)
-            c2 = x1 + t_size[0], y1 - t_size[1] - 3
-            cv2.rectangle(img, (x1, y1), c2, [255, 0, 255], -1, cv2.LINE_AA)  # filled
-            cv2.putText(img, label, (x1, y1 - 2), 0, 1, [255, 255, 255], thickness=1, lineType=cv2.LINE_AA)  # outline
+                t_size = cv2.getTextSize(label, 0, fontScale=1, thickness=2)[0]  # Size of the label
+                print(t_size)
+                c2 = x1 + t_size[0], y1 - t_size[1] - 3
+                cv2.rectangle(img, (x1, y1), c2, [255, 0, 255], -1, cv2.LINE_AA)  # filled
+                cv2.putText(img, label, (x1, y1 - 2), 0, 1, [255, 255, 255], thickness=1, lineType=cv2.LINE_AA)  # outline
+                currentArray = np.array([x1, y1, x2, y2, conf])
+                detections = np.vstack((detections, currentArray))
+
+    resultsTracker = tracker.update(detection)
+
+    for result in resultsTracker:
+        x1, y1, x2,y2, Id = result
+        print(result)
+
     out.write(img)
     cv2.imshow("Video", img)
+    cv2.imshow("ImageRegion", imgRegion)
     if cv2.waitKey(1) & 0xFF == ord('1'):  # When I press '1', webcam will stop
         break
 out.release()
