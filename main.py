@@ -1,3 +1,7 @@
+# Development of a Web Application for the Deployment of a Deep Learning Project
+# Fyp Project 1
+
+
 from flask import Flask, render_template, Response, session
 
 #FlaskForm--> it is required to receive input from the user
@@ -21,7 +25,7 @@ from YOLO_Video import video_detection
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'amelia'
-app.config['UPLOAD_FOLDER'] = 'static/files'
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 
 #Use FlaskForm to get input video file  from user
