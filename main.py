@@ -22,6 +22,8 @@ import cv2
 # YOLO_Video is the python file which contains the code for our object detection model
 #Video Detection is the Function which performs Object Detection on Input Video
 from YOLO_Video import video_detection
+from YOLO_Unit import unit_detection
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'amelia'
@@ -53,6 +55,17 @@ def generate_frames_web(path_x):
         yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
+
+def generate_frames_unit():
+    yolo_output = unit_detection()
+    for detection_ in yolo_output:
+        ref, buffer = cv2.imencode('.jpg', detection_)
+
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
+
+
 @app.route('/', methods=['GET','POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -60,11 +73,6 @@ def home():
     return render_template('index.html')
 # Rendering the Webcam Rage
 # Webcam page for the application
-
-@app.route("/webcampage", methods=['GET','POST'])
-def webcam():
-    session.clear()
-    return render_template('ui.html')
 
 # Video Page for the application
 @app.route('/videopage', methods=['GET','POST'])
@@ -81,17 +89,34 @@ def front():
                                              secure_filename(file.filename))
     return render_template('videoproject.html', form=form)
 
+@app.route("/webcampage", methods=['GET','POST'])
+def webcam():
+    session.clear()
+    return render_template('ui.html')
+
+@app.route("/unitpage", methods=['GET','POST'])
+def unitcam():
+    session.clear()
+    return render_template('unitproject.html')
+
+
+
 # To display the Output Video on Video page
 @app.route('/video')
 def video():
     #return Response(generate_frames(path_x='uploads/speedcam.mp4'), mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames(path_x=session.get('video_path', None)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# To display the Output Video on Webcam page
+# To display the Live Feed on Webcam page
 @app.route('/webapp')
 def webapp():
     #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames_web(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/unitv2')
+def video_feed():
+    return Response(generate_frames_unit(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

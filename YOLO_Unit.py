@@ -2,10 +2,10 @@ from ultralytics import YOLO
 import cv2
 import math
 
-def video_detection(path_x):
-    video_capture = path_x
-    # Create a Webcam object
-    cap = cv2.VideoCapture(video_capture)  # Webcam
+def unit_detection():
+    # extract the video stream from the Ip address
+    cap = cv2.VideoCapture('http://10.254.239.1/video_feed')
+    cap.set(cv2.CAP_PROP_FPS, 90)  # Desired frame rate
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
 

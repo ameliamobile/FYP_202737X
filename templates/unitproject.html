@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Live Video Streaming with Flask</title>
+    <style>
+            h2{
+                text-align: center;
+            }
+
+            p{
+            text-align: center;
+            }
+
+            .container{
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            section.column{
+                background-color: black;
+                width: 640px;
+                height: 480px;
+                border-radius: 35px;
+                object-fit: contain;
+                margin: auto;
+                margin-top: 20px;
+            }
+
+            .column figure{
+                width:100%;
+                text-align:center;
+            }
+
+            img{
+                width: 640px;
+                height: 480px;
+                border-radius: 35px;
+                object-fit: contain;
+            }
+
+    </style>
+</head>
+<body>
+   <main>
+        <section id="home">
+            <h2><strong>Live Streaming with Flask</strong></h2>
+            <p>Video Stream taken from UnitV2 Web IP</p>
+        </section>
+   </main>
+   <div class="container">
+        <!-- first column -->
+       <section class="column">
+               <img src="{{ url_for('video_feed') }}" alt="Upload video">
+       </section>
+
+        <!-- second column -->
+       <section class="column">
+          <!-- Your second column content goes here -->
+       </section>
+
+   </div>
+
+
+</body>
+</html>

@@ -36,7 +36,7 @@ while True:
 
     results = model(imgRegion, stream=True)
 
-    detections = np.empty((0,5))
+    detections = np.empty((0, 5))
 
     # Doing detection using YOLOv8 frame by frame
     # Stream = True will use the generator and it is more efficient than normal
