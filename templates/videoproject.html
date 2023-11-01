@@ -55,12 +55,12 @@
 
         section.col-sm{
             background-color: white;
-            width: 1000px;
-            height: 650px;
             border-radius: 35px;
             object-fit: contain;
             margin: auto;
             margin-top: 20px;
+            width: 1000px;
+            height: 650px;
         }
 
         img{
@@ -97,7 +97,7 @@
 
    <main>
         <section id="home">
-            <h2><strong>Object Detection using YOLOv8</strong></h2>
+            <h2><strong>Object Detection</strong></h2>
             <p>Choose an Image or Video file to perform YOLOv8 detection</p>
         </section>
    </main>
@@ -106,21 +106,17 @@
           <img src="{{ url_for('video') }}"  alt="Upload video">
   </section>
 
-<section>
-    <div class="upload" >
-        <form method = 'POST' enctype="multipart/form-data" style="align-content: center; text-align: center;display: flex;">
-        {{form.hidden_tag()}}
-        {{form.file(class_="custom-file-input")}}
+   <footer>
+        <div class="upload" >
+            <form method = 'POST' enctype="multipart/form-data" style="align-content: center; text-align: center;display: flex;">
+            {{form.hidden_tag()}}
+            {{form.file(class_="custom-file-input")}}
 
-        <div>
-        <button type="submit" name="submit" value="x" class="btnCustom">
-            Submit
-        </button>
-      </div>
-      </form>
-    </div>
-
-  </div>
-</section>
+            <button type="submit" name="submit" value="x" class="btnCustom">
+                Submit
+            </button>
+            </form>
+        </div>
+   </footer>
 </body>
 </html>
