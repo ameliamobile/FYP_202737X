@@ -1,6 +1,5 @@
 # Development of a Web Application for the Deployment of a Deep Learning Project
-# Fyp Project 1
-
+# Fyp Project
 
 from flask import Flask, render_template, Response, session
 
@@ -66,6 +65,7 @@ def generate_frames_unit():
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
 
+
 @app.route('/', methods=['GET','POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -97,7 +97,7 @@ def webcam():
 @app.route("/unitpage", methods=['GET','POST'])
 def unitcam():
     session.clear()
-    return render_template('unitproject.html')
+    return render_template('unitv2.html')
 
 
 
