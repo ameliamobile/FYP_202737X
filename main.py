@@ -118,18 +118,18 @@ def video():
     return Response(generate_frames(path_x=session.get('video_path', None)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # To display the Live Feed on Webcam page
-@app.route('/web')
+@app.route('/webapp')
 def webapp():
     #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames_web(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/count')
+@app.route('/countapp')
 def countapp():
     #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames_count(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/unit')
-def unit():
+@app.route('/unitv2')
+def video_feed():
     return Response(generate_frames_unit(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
