@@ -5,7 +5,7 @@ import math
 def unit_detection():
     # extract the video stream from the Ip address
     cap = cv2.VideoCapture('http://10.254.239.1/video_feed')
-    cap.set(cv2.CAP_PROP_FPS, 90)  # Desired frame rate
+    cap.set(cv2.CAP_PROP_FPS, 30)  # Desired frame rate
     frame_width = int(cap.get(3))
     frame_height = int(cap.get(4))
 
@@ -35,68 +35,30 @@ def unit_detection():
             for box in boxes:
                 # Confidence score
                 # print(box.conf[0])
-                conf = math.ceil((box.conf[0] * 100)) / 100  # Calculates the confidence score and rounds the confidence
+                conf = math.ceil((box.conf[0] * 100))  # Calculates the confidence score and rounds the confidence
 
                 # Class Name
                 cls = int(box.cls[0])
                 class_name = classNames[cls]
 
-                # Results for 90% confidence score
-                if conf > 0.75:
-                    # Bounding box
-                    x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors
-                    # print(x1, y1, x2, y2)
-                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # Converting output from tensors into integers
-                    # print(x1, y1, x2, y2)
+                # Bounding box
+                x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors
+                # print(x1, y1, x2, y2)
+                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # Converting output from tensors into integers
+                # print(x1, y1, x2, y2)
 
-                    # cv2.rectangle(image, start_point, end_point, color, thickness)
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 3)
+                # cv2.rectangle(image, start_point, end_point, color, thickness)
+                cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 3)
 
-                    # Combining the label and confidence score
-                    label = f'{class_name}{conf}'
-                    t_size = cv2.getTextSize(label, 0, fontScale=0.7, thickness=2)[0]  # Size of the label
-                    # print(t_size)
-                    c2 = x1 + t_size[0], y1 - t_size[1] - 3
-                    cv2.rectangle(img, (x1, y1), c2, [0, 255, 0], -1, cv2.LINE_AA)  # Filled
-                    cv2.putText(img, label, (x1, y1 - 2), 0, 0.7, [255, 255, 255], thickness=2, lineType=cv2.LINE_AA)  # Outline
+                # Combining the label and confidence score
+                label = f'{class_name} {conf}%'
+                t_size = cv2.getTextSize(label, 0, fontScale=0.7, thickness=2)[0]  # Size of the label
+                # print(t_size)
+                c2 = x1 + t_size[0], y1 - t_size[1] - 3
+                cv2.rectangle(img, (x1, y1), c2, [0, 255, 0], -1, cv2.LINE_AA)  # Filled
+                cv2.putText(img, label, (x1, y1 - 2), 0, 0.7, [255, 255, 255], thickness=2, lineType=cv2.LINE_AA)  # Outline
 
-                # Results for 50% confidence score
-                elif conf > 0.2:
-                    # Bounding box
-                    x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors
-                    # print(x1, y1, x2, y2)
-                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # Converting output from tensors into integers
-                    # print(x1, y1, x2, y2)
 
-                    # cv2.rectangle(image, start_point, end_point, color, thickness)
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 165, 255), 3)
-
-                    # Combining the label and confidence score
-                    label = f'{class_name}{conf}'
-                    t_size = cv2.getTextSize(label, 0, fontScale=0.7, thickness=2)[0]  # Size of the label
-                    # print(t_size)
-                    c2 = x1 + t_size[0], y1 - t_size[1] - 3
-                    cv2.rectangle(img, (x1, y1), c2, [0, 165, 255], -1, cv2.LINE_AA)  # Filled
-                    cv2.putText(img, label, (x1, y1 - 2), 0, 0.7, [255, 255, 255], thickness=2, lineType=cv2.LINE_AA)  # Outline
-
-                # Results for confidence score below 50%
-                else:
-                    # Bounding box
-                    x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors
-                    # print(x1, y1, x2, y2)
-                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # Converting output from tensors into integers
-                    # print(x1, y1, x2, y2)
-
-                    # cv2.rectangle(image, start_point, end_point, color, thickness)
-                    cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 3)
-
-                    # Combining the label and confidence score
-                    label = f'{class_name}{conf}'
-                    t_size = cv2.getTextSize(label, 0, fontScale=0.7, thickness=2)[0]  # Size of the label
-                    # print(t_size)
-                    c2 = x1 + t_size[0], y1 - t_size[1] - 3
-                    cv2.rectangle(img, (x1, y1), c2, [0, 0, 255], -1, cv2.LINE_AA)  # Filled
-                    cv2.putText(img, label, (x1, y1 - 2), 0, 0.7, [255, 255, 255], thickness=2, lineType=cv2.LINE_AA)  # Outline
 
         yield img
     cv2.destroyAllWindows()

@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>UnitV2 Cam</title>
+    <title>Web Application</title>
     <style>
         body{
             font-family: Helvetica, sans-serif;
@@ -48,15 +48,14 @@
 
         h2{
             text-align: center;
-        }
-
-        p{
-            text-align: center;
+            margin-top: 50px;
         }
 
         .container{
             display: flex;
             flex-wrap: wrap;
+            margin: 50px;
+            margin-top: 100px;
         }
 
         section.column{
@@ -78,13 +77,14 @@
     </style>
 </head>
 <body>
+
     <header class="feature-box center">
         <nav>
             <ul>
                 <li><a href="/home">Home</a></li>
                 <li><a href="/videopage">Object Detection</a></li>
                 <li><a href="/webcampage">Live Webcam</a></li>
-                <li><a href="/unitpage">UnitV2 Cam</a></li>
+                <li><a href="/unitpage">Airport Cam</a></li>
             </ul>
         </nav>
     </header>
@@ -92,31 +92,21 @@
 
    <main>
         <section id="home">
-            <h2><strong>UnitV2 Object Detection Live Stream</strong></h2>
-            <p>Video Stream taken from UnitV2 Web IP</p>
+            <h2><strong>Development of Web Application to detect & count people</strong></h2>
         </section>
    </main>
    <div class="container">
         <!-- first area -->
        <section class="column">
-           <img src="{{ url_for('video_feed') }}" alt="Upload video">
+           <img src="{{ url_for('count') }}"   alt="Connecting Webcam">
        </section>
 
         <!-- second area -->
        <section class="column">
-          <!-- Your second area content goes here -->
+          <img src="{{ url_for('unit') }}" alt="Upload video">
        </section>
 
-<!--        &lt;!&ndash; third area &ndash;&gt;-->
-<!--       <section class="column">-->
-<!--          &lt;!&ndash; Your third area content goes here &ndash;&gt;-->
-<!--       </section>-->
-
-<!--        &lt;!&ndash; fourth area &ndash;&gt;-->
-<!--       <section class="column">-->
-<!--          &lt;!&ndash; Your fourth area content goes here &ndash;&gt;-->
-<!--       </section>-->
-
    </div>
+
 </body>
 </html>

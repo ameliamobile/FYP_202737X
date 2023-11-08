@@ -6,6 +6,7 @@ import cv2
 # YOLO_Video is the python file which contains the code for object detection model
 # Video Detection is the Function which performs the Object Detection on Input video
 from YOLO_Video import video_detection
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'amelia'

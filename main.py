@@ -19,9 +19,11 @@ import os
 import cv2
 
 # YOLO_Video is the python file which contains the code for our object detection model
-#Video Detection is the Function which performs Object Detection on Input Video
+# Video Detection is the Function which performs Object Detection on Input Video
 from YOLO_Video import video_detection
 from YOLO_Unit import unit_detection
+from count import count_detection
+#from region_counter import region_detection
 
 app = Flask(__name__)
 
@@ -29,10 +31,10 @@ app.config['SECRET_KEY'] = 'amelia'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 
-#Use FlaskForm to get input video file  from user
+# Use FlaskForm to get input video file  from user
 class UploadFileForm(FlaskForm):
-    #Store the uploaded video file path in the FileField in the variable file
-    #Add validators to make sure the user inputs the video in the valid format and user does upload the video when prompted to do so
+    # Store the uploaded video file path in the FileField in the variable file
+    # Add validators to make sure the user inputs the video in the valid format and user does upload the video when prompted to do so
     file = FileField("File", validators=[InputRequired()])
     submit = SubmitField("Run")
 
@@ -55,6 +57,15 @@ def generate_frames_web(path_x):
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
 
+def generate_frames_count(path_x):
+    yolo_output = count_detection(path_x)
+    for detection_ in yolo_output:
+        ref, buffer = cv2.imencode('.jpg', detection_)
+
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
+
 def generate_frames_unit():
     yolo_output = unit_detection()
     for detection_ in yolo_output:
@@ -65,8 +76,7 @@ def generate_frames_unit():
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
 
-
-@app.route('/', methods=['GET','POST'])
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     session.clear()
@@ -108,13 +118,18 @@ def video():
     return Response(generate_frames(path_x=session.get('video_path', None)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # To display the Live Feed on Webcam page
-@app.route('/webapp')
+@app.route('/web')
 def webapp():
     #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames_web(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@app.route('/unitv2')
-def video_feed():
+@app.route('/count')
+def countapp():
+    #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(generate_frames_count(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/unit')
+def unit():
     return Response(generate_frames_unit(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 

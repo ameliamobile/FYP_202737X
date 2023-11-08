@@ -5,9 +5,9 @@ import math
 def video_detection(path_x):
     video_capture = path_x
     # Create a Webcam object
-    cap = cv2.VideoCapture(video_capture)  # Webcam
-    frame_width = int(cap.get(3))
-    frame_height = int(cap.get(4))
+    cap = cv2.VideoCapture(video_capture)
+    frame_width = int(cap.get(5))
+    frame_height = int(cap.get(6))
 
     model = YOLO(" ../YOLO-Weights/yolov8n.pt")
 
