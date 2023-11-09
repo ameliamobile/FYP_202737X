@@ -22,8 +22,8 @@ import cv2
 # Video Detection is the Function which performs Object Detection on Input Video
 from YOLO_Video import video_detection
 from YOLO_Unit import unit_detection
-from count import count_detection
-#from region_counter import region_detection
+#from count import count_detection
+from region_counter import region_detection
 
 app = Flask(__name__)
 
@@ -58,7 +58,7 @@ def generate_frames_web(path_x):
 
 
 def generate_frames_count(path_x):
-    yolo_output = count_detection(path_x)
+    yolo_output = region_detection(path_x)
     for detection_ in yolo_output:
         ref, buffer = cv2.imencode('.jpg', detection_)
 
@@ -124,7 +124,7 @@ def webapp():
     return Response(generate_frames_web(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/countapp')
-def countapp():
+def count():
     #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames_count(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
