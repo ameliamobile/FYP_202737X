@@ -2,6 +2,7 @@ from ultralytics import YOLO
 import cv2
 import math
 
+
 def unit_detection():
     # extract the video stream from the Ip address
     cap = cv2.VideoCapture('http://10.254.239.1/video_feed')

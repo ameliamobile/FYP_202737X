@@ -18,7 +18,7 @@ current_region = None
 counting_regions = [
     {
         'name': 'YOLOv8 Rectangle Region',
-        'polygon': Polygon([(100, 100), (540, 100), (540, 400), (100, 400)]),  # Polygon points
+        'polygon': Polygon([(250, 100), (540, 100), (540, 400), (250, 400)]),  # Polygon points
         'person_counts': 0,
         'chair_counts': 0,
         'dragging': False,
@@ -26,6 +26,35 @@ counting_regions = [
         'text_color': (0, 0, 0),  # Region Text Color
     },
     ]
+
+# def mouse_callback(event, x, y, flags, param):
+#     """Mouse call back event."""
+#     global current_region
+#
+#     # Mouse left button down event
+#     if event == cv2.EVENT_LBUTTONDOWN:
+#         for region in counting_regions:
+#             if region['polygon'].contains(Point((x, y))):
+#                 current_region = region
+#                 current_region['dragging'] = True
+#                 current_region['offset_x'] = x
+#                 current_region['offset_y'] = y
+#
+#     # Mouse move event
+#     elif event == cv2.EVENT_MOUSEMOVE:
+#         if current_region is not None and current_region['dragging']:
+#             dx = x - current_region['offset_x']
+#             dy = y - current_region['offset_y']
+#             current_region['polygon'] = Polygon([
+#                 (p[0] + dx, p[1] + dy) for p in current_region['polygon'].exterior.coords])
+#             current_region['offset_x'] = x
+#             current_region['offset_y'] = y
+#
+#     # Mouse left button up event
+#     elif event == cv2.EVENT_LBUTTONUP:
+#         if current_region is not None and current_region['dragging']:
+#             current_region['dragging'] = False
+
 
 def region_detection(path_x):
     vid_frame_count = 0
@@ -115,12 +144,11 @@ def region_detection(path_x):
             cv2.polylines(frame, [polygon_coords], isClosed=True, color=region_color, thickness=2)
             # cv2.putText(frame, f'Person Count: {person_count}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
             # cv2.putText(frame, f'Chair Count: {chair_count}', (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            # cv2.setMouseCallback('Ultralytics YOLOv8 Region Counter Movable', mouse_callback)
 
         for region in counting_regions:  # Reinitialize count for each region
             region['person_counts'] = 0
             region['chair_counts'] = 0
-
-
 
         yield frame
     cv2.destroyAllWindows()
