@@ -18,7 +18,7 @@ current_region = None
 counting_regions = [
     {
         'name': 'YOLOv8 Rectangle Region',
-        'polygon': Polygon([(100, 50), (540, 50), (540, 440), (100, 440)]),  # Polygon points
+        'polygon': Polygon([(100, 100), (540, 100), (540, 400), (100, 400)]),  # Polygon points
         'person_counts': 0,
         'chair_counts': 0,
         'dragging': False,
@@ -29,8 +29,6 @@ counting_regions = [
 
 def region_detection(path_x):
     vid_frame_count = 0
-    # person_count = 0
-    # chair_count = 0
 
     # Video setup
     video_capture = path_x
