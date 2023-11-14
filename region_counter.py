@@ -168,5 +168,9 @@ def region_detection(path_x):
 # TODO: If distance between person and chair is above 100:
 #  display the label = bag unattended only on the chair boundary
 
+# TODO: Baggage Tracking:
+#  Implement object tracking to monitor the movement of unattended baggage.
+#  Trigger alerts if baggage remains unattended for an extended period.
+
 
 
