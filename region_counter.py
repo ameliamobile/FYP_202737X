@@ -1,7 +1,12 @@
-# Trying to integrate my code and region counter
+"""Region Counter and Unattended Bag Alert Code"""
+# TODO: To implement Object detection and Region counter in a specified region of interest on a video stream
+# TODO: Baggage Tracking:
+#  Implement object tracking to monitor the movement of unattended baggage.
+#  Using the centroid of the detected object to calculate the distance between person and chair
+#  To determine whether the suitcase is left unattended
+#  Trigger alerts if baggage remains unattended for an extended period.
 
 from collections import defaultdict
-from pathlib import Path
 
 import cv2
 import math
@@ -10,7 +15,6 @@ from shapely.geometry import Polygon
 from shapely.geometry.point import Point
 
 from ultralytics import YOLO
-from ultralytics.utils.files import increment_path
 from ultralytics.utils.plotting import Annotator, colors
 
 track_history = defaultdict(list)
@@ -19,8 +23,8 @@ current_region = None
 counting_regions = [
     {
         'name': 'YOLOv8 Rectangle Region',
-        'polygon': Polygon([(0, 0), (640, 0), (640, 480), (0, 480)]),  # The whole frame
-        #'polygon': Polygon([(50, 50), (590, 50), (590, 430), (50, 430)]),  # 50 px offset of the frame
+        'polygon': Polygon([(0, 0), (640, 0), (640, 480), (0, 480)]),  #The whole frame
+        #'polygon': Polygon([(50, 50), (590, 50), (590, 430), (50, 430)]),  #50 px offset of the frame
         'person_counts': 0,
         'chair_counts': 0,
         'dragging': False,
@@ -61,14 +65,15 @@ counting_regions = [
 def region_detection(path_x):
     vid_frame_count = 0
 
-    # Video setup
+    # TODO: Video Setup
     video_capture = path_x
     cap = cv2.VideoCapture(video_capture)
     # cap = cv2.VideoCapture(
-    #     'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/piShJKb/videoblocks-tel-aviv-israel-january-2018-passengers-walking-through-airport-terminal_rxbjdf5pm__2c365d4ce0ca2c27df6c887d19cd79f7__P360.mp4')
+    #     'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/piShJKb/videoblocks-tel-aviv-israel-january-2018-
+    #     passengers-walking-through-airport-terminal_rxbjdf5pm__2c365d4ce0ca2c27df6c887d19cd79f7__P360.mp4')
     frame_width, frame_height = int(cap.get(3)), int(cap.get(4))
 
-    # Setup Model
+    # TODO: Setup Model
     model = YOLO(" ../YOLO-Weights/yolov8n.pt")
 
     # TODO: Iterate over video frames
@@ -90,7 +95,7 @@ def region_detection(path_x):
             annotator = Annotator(frame, line_width=2, example=str(names))
 
             for box, track_id, cls in zip(boxes, track_ids, clss):
-                # Add this if statement to filter 'person' and 'chair'
+                # TODO: Filter person and chair results
                 if names[cls] not in ['person', 'chair']:
                     continue
 
@@ -117,12 +122,12 @@ def region_detection(path_x):
                     if region['polygon'].contains(Point((x, y))):
                         if class_names == 'person':
                             region['person_counts'] += 1
-                            # Calculate centroid coordinates
+                            # TODO: Calculate centroid coordinates
                             centroid_x_person = (x + (x + w)) / 2
                             centroid_y_person = (y + (y + h)) / 2
                         elif class_names == 'chair':
                             region['chair_counts'] += 1
-                            # Calculate centroid coordinates
+                            # TODO: Calculate centroid coordinates
                             centroid_x_chair = (x + (x + w)) / 2
                             centroid_y_chair = (y + (y + h)) / 2
 
@@ -148,29 +153,19 @@ def region_detection(path_x):
                         region_text_color, 2)
             cv2.putText(frame, f'Chair Count: {region_label_chair}', (30, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
                         region_text_color, 2)
-            # To display the region area for counting
+            # TODO: To display the region area for counting
             cv2.polylines(frame, [polygon_coords], isClosed=True, color=region_color, thickness=2)
 
             # cv2.setMouseCallback('Ultralytics YOLOv8 Region Counter Movable', mouse_callback)
 
-        for region in counting_regions:  # Reinitialize count for each region
+        # TODO: Reinitialize count for each region
+        for region in counting_regions:
             region['person_counts'] = 0
             region['chair_counts'] = 0
 
         yield frame
     cv2.destroyAllWindows()
 
-# TODO: Centroid detection of abandoned bag in the airport premises
-
-# TODO: To detect the centroid of the person and chair within specified regions, you can calculate the centroid based
-#  on the individual detected bounding boxes
-
-# TODO: If distance between person and chair is above 100:
-#  display the label = bag unattended only on the chair boundary
-
-# TODO: Baggage Tracking:
-#  Implement object tracking to monitor the movement of unattended baggage.
-#  Trigger alerts if baggage remains unattended for an extended period.
 
 
 

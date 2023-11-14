@@ -1,5 +1,4 @@
-# Development of a Web Application for the Deployment of a Deep Learning Project
-# Fyp Project
+"""Development of a Web Application for the Deployment of a Deep Learning Project"""
 
 from flask import Flask, render_template, Response, session
 
@@ -9,11 +8,10 @@ from flask import Flask, render_template, Response, session
 from flask_wtf import FlaskForm
 
 
-from wtforms import FileField, SubmitField, StringField, DecimalRangeField, IntegerRangeField
+from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
-from wtforms.validators import InputRequired, NumberRange
+from wtforms.validators import InputRequired
 import os
-
 
 # Required to run the YOLOv8 model
 import cv2
@@ -22,7 +20,6 @@ import cv2
 # Video Detection is the Function which performs Object Detection on Input Video
 from YOLO_Video import video_detection
 from YOLO_Unit import unit_detection
-#from count import count_detection
 from region_counter import region_detection
 
 app = Flask(__name__)
@@ -31,10 +28,12 @@ app.config['SECRET_KEY'] = 'amelia'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
 
-# Use FlaskForm to get input video file  from user
+
+# TODO: Use FlaskForm to get input video file  from user
 class UploadFileForm(FlaskForm):
     # Store the uploaded video file path in the FileField in the variable file
-    # Add validators to make sure the user inputs the video in the valid format and user does upload the video when prompted to do so
+    # Add validators to make sure the user inputs the video in the valid format and user does upload the video when
+    # prompted to do so
     file = FileField("File", validators=[InputRequired()])
     submit = SubmitField("Run")
 
@@ -56,7 +55,6 @@ def generate_frames_web(path_x):
         yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
-
 def generate_frames_count(path_x):
     yolo_output = region_detection(path_x)
     for detection_ in yolo_output:
@@ -76,6 +74,7 @@ def generate_frames_unit():
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
 
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/home', methods=['GET', 'POST'])
 def home():
@@ -84,7 +83,7 @@ def home():
 # Rendering the Webcam Rage
 # Webcam page for the application
 
-# Video Page for the application
+# TODO: Video Page for the application
 @app.route('/videopage', methods=['GET','POST'])
 def front():
     # Upload File Form: Create an instance for the Upload File Form
@@ -111,23 +110,25 @@ def unitcam():
 
 
 
-# To display the Output Video on Video page
+# TODO: To display the Output Video on Video page
 @app.route('/video')
 def video():
     #return Response(generate_frames(path_x='uploads/speedcam.mp4'), mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames(path_x=session.get('video_path', None)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-# To display the Live Feed on Webcam page
+# TODO: To display the Live Feed on Webcam page
 @app.route('/webapp')
 def webapp():
     #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames_web(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+# TODO: To display the Live Feed on Camera page (region counter)
 @app.route('/countapp')
 def count():
     #return Response(generate_frames(path_x = session.get('video_path', None),conf_=round(float(session.get('conf_', None))/100,2)),mimetype='multipart/x-mixed-replace; boundary=frame')
     return Response(generate_frames_count(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+# TODO: To display the Live Feed of the UnitV2 feed on Camera page
 @app.route('/unitv2')
 def video_feed():
     return Response(generate_frames_unit(), mimetype='multipart/x-mixed-replace; boundary=frame')

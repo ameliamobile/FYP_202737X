@@ -2,9 +2,10 @@ from ultralytics import YOLO
 import cv2
 import math
 
+# TODO: Function that does the Object detection using YOLOv8 model
 def video_detection(path_x):
     video_capture = path_x
-    # Create a Webcam object
+    # TODO: Create a Webcam object
     cap = cv2.VideoCapture(video_capture)
     frame_width = int(cap.get(5))
     frame_height = int(cap.get(6))
@@ -24,26 +25,26 @@ def video_detection(path_x):
 
     while True:
         success, img = cap. read()
-        # Doing detection using YOLOv8 frame by frame
+        # TODO: Object detection using YOLOv8 frame by frame
         # Stream = True will use the generator and it is more efficient than normal
         results = model(img, stream=True)
         # Once we have the results, we can check for the individual bounding boxes and see how well it performs
-        # Once we have the results, we will loop through them and we will have the bounding boxes for each of the results
+        # We will loop through them, and we will have the bounding boxes for each of the results
         # We will loop through each of the bounding box
         for r in results:
             boxes = r.boxes
             for box in boxes:
-                # Confidence score
+                # TODO: Confidence score
                 # print(box.conf[0])
                 conf = math.ceil((box.conf[0] * 100)) / 100  # Calculates the confidence score and rounds the confidence
 
-                # Class Name
+                # TODO: Class Name
                 cls = int(box.cls[0])
                 class_name = classNames[cls]
 
-                # Results for 90% confidence score
+                # TODO: Results for 90% confidence score
                 if conf > 0.75:
-                    # Bounding box
+                    # TODO: Bounding box
                     x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors
                     # print(x1, y1, x2, y2)
                     x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # Converting output from tensors into integers
@@ -52,7 +53,7 @@ def video_detection(path_x):
                     # cv2.rectangle(image, start_point, end_point, color, thickness)
                     cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 3)
 
-                    # Combining the label and confidence score
+                    # TODO: Combining the label and confidence score
                     label = f'{class_name}{conf}'
                     t_size = cv2.getTextSize(label, 0, fontScale=0.7, thickness=2)[0]  # Size of the label
                     # print(t_size)
@@ -61,7 +62,7 @@ def video_detection(path_x):
                     cv2.putText(img, label, (x1, y1 - 2), 0, 0.7, [255, 255, 255], thickness=2,
                                 lineType=cv2.LINE_AA)  # Outline
 
-                # Results for 50% confidence score
+                # TODO: Results for 50% confidence score
                 elif conf > 0.2:
                     # Bounding box
                     x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors
@@ -81,7 +82,7 @@ def video_detection(path_x):
                     cv2.putText(img, label, (x1, y1 - 2), 0, 0.7, [255, 255, 255], thickness=2,
                                 lineType=cv2.LINE_AA)  # Outline
 
-                # Results for confidence score below 50%
+                # TODO: Results for confidence score below 50%
                 else:
                     # Bounding box
                     x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors

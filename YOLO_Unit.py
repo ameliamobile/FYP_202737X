@@ -2,9 +2,9 @@ from ultralytics import YOLO
 import cv2
 import math
 
-
+# TODO: Function that does the Object detection using YOLOv8 model on the UnitV2 Camera stream
 def unit_detection():
-    # extract the video stream from the Ip address
+    # TODO: Extract the video stream from the Ip address
     cap = cv2.VideoCapture('http://10.254.239.1/video_feed')
     cap.set(cv2.CAP_PROP_FPS, 30)  # Desired frame rate
     frame_width = int(cap.get(3))
@@ -29,20 +29,20 @@ def unit_detection():
         # Stream = True will use the generator and it is more efficient than normal
         results = model(img, stream=True)
         # Once we have the results, we can check for the individual bounding boxes and see how well it performs
-        # Once we have the results, we will loop through them and we will have the bounding boxes for each of the results
+        # We will loop through them, and we will have the bounding boxes for each of the results
         # We will loop through each of the bounding box
         for r in results:
             boxes = r.boxes
             for box in boxes:
-                # Confidence score
+                # TODO: Confidence score
                 # print(box.conf[0])
                 conf = math.ceil((box.conf[0] * 100))  # Calculates the confidence score and rounds the confidence
 
-                # Class Name
+                # TODO: Class Name
                 cls = int(box.cls[0])
                 class_name = classNames[cls]
 
-                # Bounding box
+                # TODO: Bounding box
                 x1, y1, x2, y2 = box.xyxy[0]  # output is in tensors
                 # print(x1, y1, x2, y2)
                 x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)  # Converting output from tensors into integers
