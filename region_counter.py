@@ -10,6 +10,7 @@ from collections import defaultdict
 
 import cv2
 import math
+import time
 import numpy as np
 from shapely.geometry import Polygon
 from shapely.geometry.point import Point
@@ -101,7 +102,6 @@ def region_detection(path_x):
 
                 x, y, w, h = box
                 class_names = str(names[cls])
-                label = str("bag unattended")
 
                 xyxy = (x - w / 2), (y - h / 2), (x + w / 2), (y + h / 2)
 
@@ -137,8 +137,28 @@ def region_detection(path_x):
                                             centroid_y_person - centroid_y_chair) ** 2)
 
                             # TODO: Check if the bag is unattended (centroid distance > 100 pixels)
-                            if distance > 100:
-                                annotator.box_label(xyxy, label, color=bbox_color)
+                            if distance > 150:
+                                # TODO: Record the time when bag is first detected unattended
+                                if 'unattended_bag_time' not in region or region['unattended_bag_time'] is None:
+                                    region[
+                                        'unattended_bag_time'] = time.time()
+
+                                # TODO: Calculate elapsed time since bag is unattended
+                                elapsed_time = time.time() - region['unattended_bag_time']
+
+                                # TODO: Display elapsed time in the bounding box label
+                                label_with_time = f'Bag Unattended: {elapsed_time:.2f} seconds'
+                                annotator.box_label(xyxy, label_with_time, (0, 0, 255))
+
+                                # TODO: Trigger alerts, actions, or notifications based on elapsed time if needed
+                                threshold_time = 10.0  # Define your threshold time for triggering actions
+                                if elapsed_time > threshold_time:
+                                    # Perform actions or trigger alerts based on the elapsed time
+                                    cv2.putText(frame, f'ABANDONED BAG ALERT', (300, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
+                                                (0, 0, 255), 2)
+                            else:
+                                # Reset the unattended_bag_time if the distance is less than 100 pixels
+                                region['unattended_bag_time'] = None
 
         # TODO: Draw regions (Polygons/Rectangles)
         for region in counting_regions:
