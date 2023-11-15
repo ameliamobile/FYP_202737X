@@ -106,7 +106,7 @@ def webcam():
 @app.route("/unitpage", methods=['GET','POST'])
 def unitcam():
     session.clear()
-    return render_template('unitv2.html')
+    return render_template('layout.html')
 
 
 
