@@ -7,8 +7,7 @@ def unit_detection():
     # TODO: Extract the video stream from the Ip address
     cap = cv2.VideoCapture('http://10.254.239.1/video_feed')
     cap.set(cv2.CAP_PROP_FPS, 30)  # Desired frame rate
-    frame_width = int(cap.get(3))
-    frame_height = int(cap.get(4))
+    frame_width, frame_height = int(cap.get(3)), int(cap.get(4))
 
     model = YOLO(" ../YOLO-Weights/yolov8n.pt")
 
@@ -30,7 +29,6 @@ def unit_detection():
         results = model(img, stream=True)
         # Once we have the results, we can check for the individual bounding boxes and see how well it performs
         # We will loop through them, and we will have the bounding boxes for each of the results
-        # We will loop through each of the bounding box
         for r in results:
             boxes = r.boxes
             for box in boxes:

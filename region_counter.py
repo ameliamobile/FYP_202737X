@@ -5,9 +5,7 @@
 #  Using the centroid of the detected object to calculate the distance between person and chair
 #  To determine whether the suitcase is left unattended
 #  Trigger alerts if baggage remains unattended for an extended period.
-
-from collections import defaultdict
-
+import os
 import cv2
 import math
 import time
@@ -18,11 +16,13 @@ from shapely.geometry.point import Point
 from ultralytics import YOLO
 from ultralytics.utils.plotting import Annotator, colors
 
+from collections import defaultdict
 track_history = defaultdict(list)
 
 current_region = None
 counting_regions = [
     {
+        # TODO: Creating a rectangle region with polygon boundaries
         'name': 'YOLOv8 Rectangle Region',
         'polygon': Polygon([(0, 0), (640, 0), (640, 480), (0, 480)]),  #The whole frame
         #'polygon': Polygon([(50, 50), (590, 50), (590, 430), (50, 430)]),  #50 px offset of the frame
@@ -34,8 +34,8 @@ counting_regions = [
     },
     ]
 
+# """Mouse call back event."""
 # def mouse_callback(event, x, y, flags, param):
-#     """Mouse call back event."""
 #     global current_region
 #
 #     # Mouse left button down event
@@ -62,6 +62,10 @@ counting_regions = [
 #         if current_region is not None and current_region['dragging']:
 #             current_region['dragging'] = False
 
+def save_image(image, folder, filename):
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    cv2.imwrite(os.path.join(folder, filename), image)
 
 def region_detection(path_x):
     vid_frame_count = 0
@@ -117,17 +121,18 @@ def region_detection(path_x):
                 points = np.hstack(track).astype(np.int32).reshape((-1, 1, 2))
                 cv2.polylines(frame, [points], isClosed=False, color=bbox_color, thickness=2)
 
-                # TODO: Check if detection inside region
+                # TODO: Check for detection inside region
                 for region in counting_regions:
                     if region['polygon'].contains(Point((x, y))):
                         if class_names == 'person':
                             region['person_counts'] += 1
-                            # TODO: Calculate centroid coordinates
+                            # TODO: Calculate person bounding box centroid coordinates
                             centroid_x_person = (x + (x + w)) / 2
                             centroid_y_person = (y + (y + h)) / 2
+
                         elif class_names == 'chair':
                             region['chair_counts'] += 1
-                            # TODO: Calculate centroid coordinates
+                            # TODO: Calculate chair bounding box centroid coordinates
                             centroid_x_chair = (x + (x + w)) / 2
                             centroid_y_chair = (y + (y + h)) / 2
 
@@ -147,18 +152,34 @@ def region_detection(path_x):
                                 elapsed_time = time.time() - region['unattended_bag_time']
 
                                 # TODO: Display elapsed time in the bounding box label
-                                label_with_time = f'Bag Unattended: {elapsed_time:.2f} seconds'
+                                label_with_time = f'Unattended: {elapsed_time:.2f} seconds'
                                 annotator.box_label(xyxy, label_with_time, (0, 0, 255))
 
                                 # TODO: Trigger alerts, actions, or notifications based on elapsed time if needed
-                                threshold_time = 10.0  # Define your threshold time for triggering actions
+                                threshold_time = 15.0  # Define your threshold time for triggering actions
                                 if elapsed_time > threshold_time:
                                     # Perform actions or trigger alerts based on the elapsed time
-                                    cv2.putText(frame, f'ABANDONED BAG ALERT', (300, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7,
-                                                (0, 0, 255), 2)
+                                    cv2.putText(frame, f'ABANDONED BAG ALERT!!', (300, 60), cv2.FONT_HERSHEY_SIMPLEX,
+                                                0.7, (0, 0, 255), 2)  # Alert
+
+                                    # TODO: Capture and save image of the unattended bag
+                                    # Check if the image is already captured
+                                    if not region['image_captured']:
+                                        # Capture and save image of the unattended bag
+                                        bag_image = frame[int(y - h / 2):int(y + h / 2), int(
+                                            x - w / 2):int(x + w / 2)].copy()
+                                        save_image(bag_image, "unattended_bag_images",
+                                                   f'unattended_bag_{time.time()}.jpg')
+                                        # Set the image captured flag to True
+                                        region['image_captured'] = True
+                                    else:
+                                        print("Image already captured")
                             else:
                                 # Reset the unattended_bag_time if the distance is less than 100 pixels
                                 region['unattended_bag_time'] = None
+
+                                # Reset the image captured flag to False
+                                region['image_captured'] = False
 
         # TODO: Draw regions (Polygons/Rectangles)
         for region in counting_regions:
@@ -187,5 +208,6 @@ def region_detection(path_x):
     cv2.destroyAllWindows()
 
 
+# TODO: MouseCallback function didn't work properly
 
 

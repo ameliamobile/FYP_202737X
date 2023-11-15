@@ -7,8 +7,7 @@ def video_detection(path_x):
     video_capture = path_x
     # TODO: Create a Webcam object
     cap = cv2.VideoCapture(video_capture)
-    frame_width = int(cap.get(5))
-    frame_height = int(cap.get(6))
+    frame_width, frame_height = int(cap.get(5)), int(cap.get(6))  # video frame value for width and height
 
     model = YOLO(" ../YOLO-Weights/yolov8n.pt")
 
@@ -30,7 +29,6 @@ def video_detection(path_x):
         results = model(img, stream=True)
         # Once we have the results, we can check for the individual bounding boxes and see how well it performs
         # We will loop through them, and we will have the bounding boxes for each of the results
-        # We will loop through each of the bounding box
         for r in results:
             boxes = r.boxes
             for box in boxes:
@@ -42,6 +40,7 @@ def video_detection(path_x):
                 cls = int(box.cls[0])
                 class_name = classNames[cls]
 
+                # TODO: Bounding boxes correspond to the confidence level
                 # TODO: Results for 90% confidence score
                 if conf > 0.75:
                     # TODO: Bounding box
