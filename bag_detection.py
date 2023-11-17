@@ -24,7 +24,8 @@ counting_regions = [
     {
         # TODO: Creating a rectangle region with polygon boundaries
         'name': 'YOLOv8 Rectangle Region',
-        'polygon': Polygon([(50, 50), (590, 50), (590, 430), (50, 430)]),  #50 px offset of the frame
+        'polygon': Polygon([(0, 0), (640, 0), (640, 480), (0, 480)]),  #The whole frame
+        #'polygon': Polygon([(50, 50), (590, 50), (590, 430), (50, 430)]),  #50 px offset of the frame
         'person_counts': 0,
         'chair_counts': 0,
         'dragging': False,
@@ -38,12 +39,15 @@ def save_image(image, folder, filename):
         os.makedirs(folder)
     cv2.imwrite(os.path.join(folder, filename), image)
 
-def unitv2_detection():
+def camera_detection(path_x):
     vid_frame_count = 0
 
     # TODO: Video Setup
-    cap = cv2.VideoCapture('http://10.254.239.1/video_feed')
-    cap.set(cv2.CAP_PROP_FPS, 30)  # Desired frame rate
+    video_capture = path_x
+    cap = cv2.VideoCapture(video_capture)
+    # cap = cv2.VideoCapture(
+    #     'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/piShJKb/videoblocks-tel-aviv-israel-january-2018-
+    #     passengers-walking-through-airport-terminal_rxbjdf5pm__2c365d4ce0ca2c27df6c887d19cd79f7__P360.mp4')
     frame_width, frame_height = int(cap.get(3)), int(cap.get(4))
 
     # TODO: Setup Model
@@ -165,8 +169,6 @@ def unitv2_detection():
             # TODO: To display the region area for counting
             cv2.polylines(frame, [polygon_coords], isClosed=True, color=region_color, thickness=2)
 
-            # cv2.setMouseCallback('Ultralytics YOLOv8 Region Counter Movable', mouse_callback)
-
         # TODO: Reinitialize count for each region
         for region in counting_regions:
             region['person_counts'] = 0
@@ -174,5 +176,3 @@ def unitv2_detection():
 
         yield frame
     cv2.destroyAllWindows()
-
-

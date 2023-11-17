@@ -18,9 +18,9 @@ import cv2
 
 # YOLO_Video is the python file which contains the code for our object detection model
 # Video Detection is the Function which performs Object Detection on Input Video
-from YOLO_Video import file_detection
-from YOLO_Unit import unit_detection
-from region_counter import camera_detection
+from YOLO_media import file_detection
+from region_counter import unitv2_detection
+from bag_detection import camera_detection
 
 app = Flask(__name__)
 
@@ -47,7 +47,7 @@ def generate_frames(path_x=''):
 
 # TODO: For Unitv2 camera stream
 def generate_frames_unit():
-    yolo_output = unit_detection()
+    yolo_output = unitv2_detection()
     for detection_ in yolo_output:
         ref, buffer = cv2.imencode('.jpg', detection_)
 
