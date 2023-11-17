@@ -67,7 +67,7 @@ def save_image(image, folder, filename):
         os.makedirs(folder)
     cv2.imwrite(os.path.join(folder, filename), image)
 
-def region_detection(path_x):
+def camera_detection(path_x):
     vid_frame_count = 0
 
     # TODO: Video Setup

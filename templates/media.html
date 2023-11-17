@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Object Detection</title>
+    <title>Media Input</title>
 
     <style>
         body{
@@ -46,11 +46,7 @@
             width:100%;
         }
 
-        h2{
-            text-align: center;
-        }
-
-        p{
+        h2,p{
             text-align: center;
         }
 
@@ -89,9 +85,9 @@
         <nav>
             <ul>
                 <li><a href="/home">Home</a></li>
-                <li><a href="/videopage">Object Detection</a></li>
-                <li><a href="/webcampage">Live Webcam</a></li>
-                <li><a href="/unitpage">Camera</a></li>
+                <li><a href="/mediapage">Choose Files</a></li>
+                <li><a href="/unitpage">Camera 1</a></li>
+                <li><a href="/webpage">Camera 2</a></li>
             </ul>
         </nav>
     </header>
@@ -99,12 +95,12 @@
    <main>
         <section id="home">
             <h2><strong>Object Detection</strong></h2>
-            <p>Choose an Image or Video file to perform YOLOv8 detection</p>
+            <p>Choose an Image or Video file to perform detection</p>
         </section>
    </main>
 
   <section class="col-sm " >
-          <img src="{{ url_for('video') }}"  alt="Upload video">
+          <img src="{{ url_for('media') }}"  alt="Upload video">
   </section>
 
    <footer>

@@ -2,8 +2,8 @@ from ultralytics import YOLO
 import cv2
 import math
 
-# TODO: Function that does the Object detection using YOLOv8 model
-def video_detection(path_x):
+# TODO: Function that does the Object detection using YOLOv8 model (for media inpput)
+def file_detection(path_x):
     video_capture = path_x
     # TODO: Create a Webcam object
     cap = cv2.VideoCapture(video_capture)

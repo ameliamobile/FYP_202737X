@@ -46,7 +46,7 @@
             width: 100%;
         }
 
-         h2{
+        h2,p{
             text-align: center;
         }
 
@@ -95,9 +95,9 @@
         <nav>
             <ul>
                 <li><a href="/home">Home</a></li>
-                <li><a href="/videopage">Object Detection</a></li>
-                <li><a href="/webcampage">Live Webcam</a></li>
-                <li><a href="/unitpage">Camera</a></li>
+                <li><a href="/mediapage">Choose Files</a></li>
+                <li><a href="/unitpage">Camera 1</a></li>
+                <li><a href="/webpage">Camera 2</a></li>
             </ul>
         </nav>
     </header>
@@ -105,12 +105,13 @@
 
    <main>
         <section id="home">
-            <h2><strong>Live Object Detection</strong></h2>
+            <h2><strong>Live Camera feed</strong></h2>
+            <p>Detection model on Unitv2 camera</p>
         </section>
    </main>
 
   <section class="col-sm " >
-          <img src="{{ url_for('webapp') }}"   alt="Connecting Webcam">
+          <img src="{{ url_for('unitv2') }}"   alt="Connecting Webcam">
 
   </section>
 
