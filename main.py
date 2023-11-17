@@ -125,5 +125,3 @@ def webcamera():
 if __name__ == "__main__":
     app.run(debug=True)
 
-
-    #git push
