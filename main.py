@@ -21,6 +21,7 @@ import cv2
 from YOLO_media import file_detection
 from region_counter import unitv2_detection
 from bag_detection import camera_detection
+from demo import demo_detection
 
 app = Flask(__name__)
 
@@ -45,7 +46,7 @@ def generate_frames(path_x=''):
         yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
-# TODO: For Unitv2 camera stream
+# TODO: For Unitv2 camera
 def generate_frames_unit():
     yolo_output = unitv2_detection()
     for detection_ in yolo_output:
@@ -58,6 +59,16 @@ def generate_frames_unit():
 # TODO: For PC camera stream
 def generate_frames_count(path_x):
     yolo_output = camera_detection(path_x)
+    for detection_ in yolo_output:
+        ref, buffer = cv2.imencode('.jpg', detection_)
+
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
+
+# TODO: For demo stream
+def generate_frames_demo():
+    yolo_output = demo_detection()
     for detection_ in yolo_output:
         ref, buffer = cv2.imencode('.jpg', detection_)
 
@@ -102,6 +113,11 @@ def webcam():
     session.clear()
     return render_template('web.html')
 
+@app.route("/demopage", methods=['GET','POST'])
+def demolink():
+    session.clear()
+    return render_template('demo.html')
+
 
 
 
@@ -120,6 +136,11 @@ def unitv2():
 @app.route('/webcameraapp')
 def webcamera():
     return Response(generate_frames_count(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+# TODO: To display the video stream for demo
+@app.route('/demoapp')
+def demo():
+    return Response(generate_frames_demo(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":

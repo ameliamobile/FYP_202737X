@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Demo</title>
+
+    <style>
+        body{
+            font-family: Helvetica, sans-serif;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        header.feature-box.center{
+            background-color: #C2A3CD ;
+            color: white;
+            height: 100px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        ul{
+            list-style: none;
+            padding: 0px;
+        }
+
+        li{
+            display: inline-block;
+            background-color: #581845 ;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        li:hover{
+            background-color: #83AE6B  ;
+            margin: 10px;
+        }
+
+        header a{
+            color:white;
+            text-decoration:none;
+            width:100%;
+        }
+
+
+        h2,p{
+            text-align: center;
+        }
+
+        .container{
+            display: flex;
+            flex-wrap: wrap;
+            margin: 50px;
+        }
+
+        section.column{
+            background-color: white;
+            width: 640px;
+            height: 480px;
+            object-fit: contain;
+            margin: auto;
+        }
+
+        section.column,img{
+            width: 640px;
+            height: 480px;
+            object-fit: contain;
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="feature-box center">
+        <nav>
+            <ul>
+                <li><a href="/home">Home</a></li>
+                <li><a href="/mediapage">Choose Files</a></li>
+                <li><a href="/unitpage">Camera 1</a></li>
+                <li><a href="/webpage">Camera 2</a></li>
+                <li><a href="/demopage">Demo</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+   <main>
+        <section id="home">
+            <h2><strong>Video Stream Demo</strong></h2>
+            <p>For demo, Count people moving along the airport and detect bags that are left unattended.</p>
+        </section>
+   </main>
+   <div class="container">
+        <!-- first area -->
+       <section class="column">
+           <img src="{{ url_for('demo') }}"   alt="Connecting Video Link">
+       </section>
+
+       <section class="column">
+           <img src="{{ url_for('demo') }}"   alt="Connecting Video Link">
+       </section>
+
+
+   </div>
+
+</body>
+</html>
