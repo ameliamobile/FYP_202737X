@@ -21,7 +21,10 @@ import cv2
 from YOLO_media import file_detection
 from region_counter import unitv2_detection
 from bag_detection import camera_detection
-from demo import demo_detection
+from car_counter import car_detection
+from people_counter import people_detection
+from demo import demobag_detection
+
 
 app = Flask(__name__)
 
@@ -67,8 +70,18 @@ def generate_frames_count(path_x):
                     b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
 
 # TODO: For demo stream
-def generate_frames_demo():
-    yolo_output = demo_detection()
+def generate_frames_demo1():
+    yolo_output = people_detection()
+    for detection_ in yolo_output:
+        ref, buffer = cv2.imencode('.jpg', detection_)
+
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+                    b'Content-Type: image/jpeg\r\n\r\n' + frame +b'\r\n')
+
+# TODO: For demo stream
+def generate_frames_demo2():
+    yolo_output = demobag_detection()
     for detection_ in yolo_output:
         ref, buffer = cv2.imencode('.jpg', detection_)
 
@@ -138,9 +151,14 @@ def webcamera():
     return Response(generate_frames_count(path_x=0), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # TODO: To display the video stream for demo
-@app.route('/demoapp')
-def demo():
-    return Response(generate_frames_demo(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/demoapp1')
+def peoplecount():
+    return Response(generate_frames_demo1(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+# TODO: To display the video stream for demo
+@app.route('/demoapp2')
+def bagdemo():
+    return Response(generate_frames_demo2(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":

@@ -45,10 +45,6 @@ def camera_detection(path_x):
     # TODO: Video Setup
     video_capture = path_x
     cap = cv2.VideoCapture(video_capture)
-    # cap = cv2.VideoCapture(
-    #     'https://dm0qx8t0i9gc9.cloudfront.net/watermarks/video/piShJKb/videoblocks-tel-aviv-israel-january-2018-
-    #     passengers-walking-through-airport-terminal_rxbjdf5pm__2c365d4ce0ca2c27df6c887d19cd79f7__P360.mp4')
-    frame_width, frame_height = int(cap.get(3)), int(cap.get(4))
 
     # TODO: Setup Model
     model = YOLO(" ../YOLO-Weights/yolov8n.pt")

@@ -59,15 +59,15 @@
 
         section.column{
             background-color: white;
-            width: 640px;
-            height: 480px;
+            width: 850px;
+            height: 700px;
             object-fit: contain;
             margin: auto;
         }
 
         section.column,img{
-            width: 640px;
-            height: 480px;
+            width: 850px;
+            height: 700px;
             object-fit: contain;
         }
 
@@ -91,17 +91,17 @@
    <main>
         <section id="home">
             <h2><strong>Video Stream Demo</strong></h2>
-            <p>For demo, Count people moving along the airport and detect bags that are left unattended.</p>
+            <p>For demo, Count cars moving along the road and detect bags that are left unattended.</p>
         </section>
    </main>
    <div class="container">
         <!-- first area -->
        <section class="column">
-           <img src="{{ url_for('demo') }}"   alt="Connecting Video Link">
+           <img src="{{ url_for('peoplecount') }}"   alt="Connecting Video Link">
        </section>
 
        <section class="column">
-           <img src="{{ url_for('demo') }}"   alt="Connecting Video Link">
+           <img src="{{ url_for('bagdemo') }}"   alt="Connecting Video Link">
        </section>
 
 
