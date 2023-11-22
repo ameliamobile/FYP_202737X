@@ -113,11 +113,11 @@ def demobag_detection():
                                 annotator.box_label(xyxy, label_with_time, (0, 0, 255))
 
                                 # TODO: Trigger alerts, actions, or notifications based on elapsed time if needed
-                                threshold_time = 30.0  # Define your threshold time for triggering actions
+                                threshold_time = 15.0  # Define your threshold time for triggering actions
                                 if elapsed_time > threshold_time:
                                     # Perform actions or trigger alerts based on the elapsed time
-                                    cv2.putText(frame, f'ABANDONED BAG ALERT!!', (300, 60), cv2.FONT_HERSHEY_SIMPLEX,
-                                                0.7, (0, 0, 255), 2)  # Alert
+                                    cv2.putText(frame, f'ABANDONED BAG ALERT!!', (300, 200), cv2.FONT_HERSHEY_SIMPLEX,
+                                                2, (0, 0, 255), 3)  # Alert
 
                                     # TODO: Capture and save image of the unattended bag
                                     # Check if the image is already captured
