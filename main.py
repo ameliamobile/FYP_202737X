@@ -109,11 +109,13 @@ def front():
     if form.validate_on_submit():
         # Uploaded video file path is saved here
         file = form.file.data
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                               secure_filename(file.filename)))  # Then save the file
+        file.save(os.path.join(os.path.abspath(
+            os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
+            secure_filename(file.filename)))  # Then save the file
         # Use session storage to save video file path
-        session['video_path'] = os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                                             secure_filename(file.filename))
+        session['video_path'] = os.path.join(os.path.abspath(
+            os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
+            secure_filename(file.filename))
     return render_template('media.html', form=form)
 
 @app.route("/unitpage", methods=['GET','POST'])

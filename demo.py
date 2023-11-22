@@ -17,7 +17,10 @@ counting_regions = [
     {
         # TODO: Creating a rectangle region with polygon boundaries
         'name': 'YOLOv8 Rectangle Region',
-        'polygon': Polygon([(0, 0), (640, 0), (640, 480), (0, 480)]),  #The whole frame
+        'polygon': Polygon([(0, 0), (1950, 0), (1950, 1300), (0, 1300)]),  #The whole frame
+        'person_counts': 0,
+        'chair_counts': 0,
+        'dragging': False,
         'region_color': (37, 255, 225),  # BGR Value
         'text_color': (0, 0, 0),  # Region Text Color
     },
@@ -32,7 +35,7 @@ def demobag_detection():
     vid_frame_count = 0
 
     # TODO: Video Setup
-    cap = cv2.VideoCapture("static/uploads/baggage.mp4")  # For Video
+    cap = cv2.VideoCapture("static/uploads/suitcase.mp4")  # For Video
 
     # TODO: Setup Model
     model = YOLO(" ../YOLO-Weights/yolov8n.pt")
@@ -87,16 +90,16 @@ def demobag_detection():
 
                         elif class_names == 'suitcase':
                             # TODO: Calculate chair bounding box centroid coordinates
-                            centroid_x_chair = (x + (x + w)) / 2
-                            centroid_y_chair = (y + (y + h)) / 2
+                            centroid_x_suitcase = (x + (x + w)) / 2
+                            centroid_y_suitcase = (y + (y + h)) / 2
 
                             # TODO: Calculate the distance between person and chair centroids
                             distance = math.sqrt(
-                                (centroid_x_person - centroid_x_chair) ** 2 + (
-                                            centroid_y_person - centroid_y_chair) ** 2)
+                                (centroid_x_person - centroid_x_suitcase) ** 2 + (
+                                            centroid_y_person - centroid_y_suitcase) ** 2)
 
                             # TODO: Check if the bag is unattended (centroid distance > 100 pixels)
-                            if distance > 150:
+                            if distance > 200:
                                 # TODO: Record the time when bag is first detected unattended
                                 if 'unattended_bag_time' not in region or region['unattended_bag_time'] is None:
                                     region[
@@ -110,7 +113,7 @@ def demobag_detection():
                                 annotator.box_label(xyxy, label_with_time, (0, 0, 255))
 
                                 # TODO: Trigger alerts, actions, or notifications based on elapsed time if needed
-                                threshold_time = 15.0  # Define your threshold time for triggering actions
+                                threshold_time = 30.0  # Define your threshold time for triggering actions
                                 if elapsed_time > threshold_time:
                                     # Perform actions or trigger alerts based on the elapsed time
                                     cv2.putText(frame, f'ABANDONED BAG ALERT!!', (300, 60), cv2.FONT_HERSHEY_SIMPLEX,
@@ -139,8 +142,10 @@ def demobag_detection():
         for region in counting_regions:
             region_color = region['region_color']
 
-
             polygon_coords = np.array(region['polygon'].exterior.coords, dtype=np.int32)
+
+            # TODO: To display the region area for counting
+            cv2.polylines(frame, [polygon_coords], isClosed=True, color=region_color, thickness=2)
 
 
         yield frame

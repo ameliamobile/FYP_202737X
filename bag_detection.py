@@ -172,3 +172,5 @@ def camera_detection(path_x):
 
         yield frame
     cv2.destroyAllWindows()
+
+
