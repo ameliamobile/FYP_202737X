@@ -109,4 +109,3 @@ def unitv2_detection():
         yield frame
     cv2.destroyAllWindows()
 
-

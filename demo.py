@@ -89,7 +89,7 @@ def demobag_detection():
                             centroid_y_person = (y + (y + h)) / 2
 
                         elif class_names == 'suitcase':
-                            # TODO: Calculate chair bounding box centroid coordinates
+                            # TODO: Calculate suitcase bounding box centroid coordinates
                             centroid_x_suitcase = (x + (x + w)) / 2
                             centroid_y_suitcase = (y + (y + h)) / 2
 
@@ -98,7 +98,7 @@ def demobag_detection():
                                 (centroid_x_person - centroid_x_suitcase) ** 2 + (
                                             centroid_y_person - centroid_y_suitcase) ** 2)
 
-                            # TODO: Check if the bag is unattended (centroid distance > 100 pixels)
+                            # TODO: Check if the bag is unattended (centroid distance > 200 pixels)
                             if distance > 200:
                                 # TODO: Record the time when bag is first detected unattended
                                 if 'unattended_bag_time' not in region or region['unattended_bag_time'] is None:
